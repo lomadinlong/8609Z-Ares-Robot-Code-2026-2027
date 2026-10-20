@@ -1,5 +1,5 @@
 ## 8609Z-Ares's Base Code
-
+## This project can no longer be edited as of 2-23-2026 as we haven't made it to states this year
 Based off of EZ-Template, an open source PROS template<br>
 Link: [EZ-Template Repo](https://github.com/EZ-Robotics/EZ-Template)<br>
 [Docs for EZ-Template](https://github.com/EZ-Robotics/EZ-Template)<br>
