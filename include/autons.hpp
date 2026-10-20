@@ -2,9 +2,12 @@
 
 void default_constants();
 
-void auton_15s(); // Auton imported straight from vex vr
-void DF(); // Drive forward a few inches to not stay touching parking zone for alliance if solo awp
+ // Drive forward a few inches to not stay touching parking zone for alliance if solo awp
 void auton_skills();
+void auton_match();
+void DF();
+void fps();
+void Autonsk();
 void drive_example();
 void turn_example();
 void drive_and_turn();

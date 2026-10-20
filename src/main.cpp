@@ -8,8 +8,8 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {-5, -17},     // Left Chassis Ports (negative port will reverse it!)
-    {18, 19},  // Right Chassis Ports (negative port will reverse it!)
+    {18, 17,11},     // Left Chassis Ports (negative port will reverse it!)
+    {-20, -19, -12},  // Right Chassis Ports (negative port will reverse it!)
 
     3,      // IMU Port
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
@@ -58,11 +58,8 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.autons_add({
-      {"Skills\n\nVEX Skills auton", auton_skills},
-      {"15S Auto Right\n\nRight Side Auton For Qualifier Rounds", auton_15s},
-      {"15 Point Skills Auton\n\nSpin top of intake to get 15 points", drive_example},
+     
       {"Turn\n\nTurn 3 times.", turn_example},
-      {"Drive Forward\n\nDrive forward a few inches to not stay touching parking zone for alliance if solo awp", DF},
       {"Drive and Turn\n\nDrive forward, turn, come back", drive_and_turn},
       {"Drive and Turn\n\nSlow down during drive", wait_until_change_speed},
       {"Swing Turn\n\nSwing in an 'S' curve", swing_example},
@@ -251,14 +248,16 @@ void opcontrol() {
     ez_template_extras();
 
     // chassis.opcontrol_tank();  // Tank control
-    //chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
+    chassis.opcontrol_arcade_standard(ez::SPLIT);   // Standard split arcade
     // chassis.opcontrol_arcade_standard(ez::SINGLE);  // Standard single arcade
-     chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
+    // chassis.opcontrol_arcade_flipped(ez::SPLIT);    // Flipped split arcade
     // chassis.opcontrol_arcade_flipped(ez::SINGLE);   // Flipped single arcade
 
     // . . .
     // Put more user control code here!
     // Speed reduction button
+    
+
 if (master.get_digital(DIGITAL_RIGHT)) {
   // Reduce speed to 60/128 when Y is held
   chassis.opcontrol_speed_max_set(60);  // 0-127, where 127 is full speed
@@ -267,85 +266,41 @@ if (master.get_digital(DIGITAL_RIGHT)) {
 }
   if(!pros::competition::is_autonomous()) {
     if (master.get_digital(DIGITAL_L2)) {
-     //Intake into Hopper
-      intakebottom.move(127);
-     intakebottom2.move(127);
-     intakemiddle.move(-127);
-     pros::delay(100);
-     if (intakemiddle.get_actual_velocity() > -1) {
-        intakemiddle.move(0);
-        pros::delay(300);
-        intakemiddle.move(-127);
-        pros::delay(200);
-      }
+      Leftlift.move(128);
+      Rightlift.move(-128);
+    }
+    else if (master.get_digital(DIGITAL_L1)) {
+      Leftlift.move(-64);
+      Rightlift.move(64);
+    }
+    else {
+      
+      Leftlift.set_brake_mode(MOTOR_BRAKE_HOLD);
+      Rightlift.set_brake_mode(MOTOR_BRAKE_HOLD);
+      Leftlift.brake();
+      Rightlift.brake();
+      //Leftlift.move(0);
+     //Rightlift.move(0);
+    }
 
-    }  
-    else if(master.get_digital(DIGITAL_L1)) {
-      //Outtake to bottom goal
-      intakebottom.move(-127);
-      intakebottom2.move(-127);
-      intakemiddle.move(42);
-      pros::delay(100);
-      if (intakemiddle.get_actual_velocity() < 1) {
-        intakemiddle.move(0);
-        pros::delay(300);
-        intakemiddle.move(127);
-        pros::delay(200);
-      }
-    }
-    else if (master.get_digital(DIGITAL_R1)) {
-      //Outtake to Middle Goal
-      intakebottom.move(127);
-      intakebottom2.move(127);
-      intakemiddle.move(127);
-      intaketop.move(127);
-
-      pros::delay(100);
-      if (intakemiddle.get_actual_velocity() < 1) {
-        intakemiddle.move(0);
-        pros::delay(300);
-        intakemiddle.move(127);
-        pros::delay(200);
-      }
-    }
-    else if (master.get_digital(DIGITAL_R2)) {
-      //Outtake to Top Goal
-      intakebottom.move(127);
-      intakebottom2.move(127);
-      intakemiddle.move(127);
-      intaketop.move(-127);
-      intaketop2.move(-127);
-      alignerPiston.set(true);
-      pros::delay(100);
-      if (intakemiddle.get_actual_velocity() < 1) {
-        pros::delay(300);
-        intakemiddle.move(0);
-        pros::delay(300);
-        intakemiddle.move(127);
-        pros::delay(200);
-      }
+    if (master.get_digital(DIGITAL_R2)) {
+      Clamp.set(true);
     }
     else {
-      intakebottom.move(0);
-      intakebottom2.move(0);
-      intakemiddle.move(0);
-      intaketop.move(0);
-      intaketop2.move(0);
+      Clamp.set(false);
     }
-    if (master.get_digital(DIGITAL_B)) {
-    //Wing Piston Control
-      wingPiston.set(true);
+    if (master.get_digital(DIGITAL_X)) {
+      Clampmotor.move(128);
+    }
+    else if (master.get_digital(DIGITAL_B)) {
+      Clampmotor.move(-128);
     }
     else {
-      wingPiston.set(false);
+      Clampmotor.set_brake_mode(MOTOR_BRAKE_HOLD);
+      Clampmotor.brake();
+      //Clampmotor.move(0);
     }
-    if ((master.get_digital(DIGITAL_DOWN)) || (master.get_digital(DIGITAL_R2)) || (master.get_digital(DIGITAL_R1))) {
-    //Aligner Piston Control
-      alignerPiston.set(true);
-    }
-    else {
-      alignerPiston.set(false);
-    }
+    
   }  
     // . . .
 
