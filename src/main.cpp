@@ -8,12 +8,12 @@
 // Chassis constructor
 ez::Drive chassis(
     // These are your drive motors, the first motor is used for sensing!
-    {18, 17,11},     // Left Chassis Ports (negative port will reverse it!)
-    {-20, -19, -12},  // Right Chassis Ports (negative port will reverse it!)
+     {16, 10},     // Left Chassis Ports (negative port will reverse it!)
+     {-11, -1}, // Right Chassis Ports (negative port will reverse it!)
 
     3,      // IMU Port
-    4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    400);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+    2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
+    450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
@@ -209,7 +209,7 @@ void ez_template_extras() {
       chassis.pid_tuner_toggle();
 
     // Trigger the selected autonomous routine
-    if (master.get_digital(DIGITAL_X) && master.get_digital(DIGITAL_UP)) {
+    if (master.get_digital(DIGITAL_LEFT) && master.get_digital(DIGITAL_DOWN)) {
       pros::motor_brake_mode_e_t preference = chassis.drive_brake_get();
       autonomous();
       chassis.drive_brake_set(preference);
@@ -270,8 +270,8 @@ if (master.get_digital(DIGITAL_RIGHT)) {
       Rightlift.move(-128);
     }
     else if (master.get_digital(DIGITAL_L1)) {
-      Leftlift.move(-64);
-      Rightlift.move(64);
+      Leftlift.move(-128);
+      Rightlift.move(128);
     }
     else {
       
@@ -283,16 +283,16 @@ if (master.get_digital(DIGITAL_RIGHT)) {
      //Rightlift.move(0);
     }
 
-    if (master.get_digital(DIGITAL_R2)) {
+    if (master.get_digital(DIGITAL_X)) {
       Clamp.set(true);
     }
     else {
       Clamp.set(false);
     }
-    if (master.get_digital(DIGITAL_X)) {
+    if (master.get_digital(DIGITAL_R2)) {
       Clampmotor.move(128);
     }
-    else if (master.get_digital(DIGITAL_B)) {
+    else if (master.get_digital(DIGITAL_R1)) {
       Clampmotor.move(-128);
     }
     else {
@@ -300,7 +300,25 @@ if (master.get_digital(DIGITAL_RIGHT)) {
       Clampmotor.brake();
       //Clampmotor.move(0);
     }
-    
+    if (master.get_digital(DIGITAL_B)) {
+      Toggle.move(128);
+    }
+    else if (master.get_digital(DIGITAL_A)) {
+      Toggle.move(-128);
+    }
+    else {
+      Toggle.set_brake_mode(MOTOR_BRAKE_HOLD);
+      Toggle.brake();
+      //Toggle.move(0);
+    }
+    if (master.get_digital(DIGITAL_Y)) {
+      Intake.move(128);
+    }
+    else {
+      Intake.set_brake_mode(MOTOR_BRAKE_HOLD);
+      Intake.brake();
+      //Intake.move(0);
+    }
   }  
     // . . .
 
