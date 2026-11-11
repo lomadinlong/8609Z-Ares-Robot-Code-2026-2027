@@ -260,9 +260,9 @@ void opcontrol() {
 
 if (master.get_digital(DIGITAL_RIGHT)) {
   // Reduce speed to 60/128 when Y is held
-  chassis.opcontrol_speed_max_set(60);  // 0-127, where 127 is full speed
+  chassis.opcontrol_speed_max_set(127);  // 0-127, where 127 is full speed
 } else {
-  chassis.opcontrol_speed_max_set(127);  // Full speed
+  chassis.opcontrol_speed_max_set(60);  // Full speed
 }
   if(!pros::competition::is_autonomous()) {
     if (master.get_digital(DIGITAL_L2)) {

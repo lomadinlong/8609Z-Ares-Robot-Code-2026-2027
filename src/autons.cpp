@@ -61,12 +61,13 @@ void default_constants() {
 void turn_example() {
   // The first parameter is the target in degrees
   // The second parameter is max speed the robot will drive at
-  Leftlift.move(127);
-  Rightlift.move(-127);
+  Rightlift.move_absolute(-450, 127);
+  Leftlift.move_absolute(450, 127);
   pros::delay(1000);
   chassis.pid_drive_set(11_in, DRIVE_SPEED, true);
-  Leftlift.move(-64);
-  Rightlift.move(64);
+  pros::delay(1000);
+  Rightlift.move_absolute(0, 127);
+
 
 }
 ///
