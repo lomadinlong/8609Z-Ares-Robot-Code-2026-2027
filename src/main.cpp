@@ -13,7 +13,7 @@ ez::Drive chassis(
 
     15,      // IMU Port
     2.75,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
-    450);   // Wheel RPM = cartridge * (motor gear / wheel gear)
+    150);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)
@@ -258,11 +258,11 @@ void opcontrol() {
     // Speed reduction button
     
 
-if (master.get_digital(DIGITAL_RIGHT)) {
+if (master.get_digital(DIGITAL_UP)) {
   // Reduce speed to 60/128 when Y is held
-  chassis.opcontrol_speed_max_set(127);  // 0-127, where 127 is full speed
+  chassis.opcontrol_speed_max_set(90);  // 0-127, where 127 is full speed
 } else {
-  chassis.opcontrol_speed_max_set(60);  // Full speed
+  chassis.opcontrol_speed_max_set(127);  // Full speed
 }
   if(!pros::competition::is_autonomous()) {
     if (master.get_digital(DIGITAL_L2)) {
@@ -313,6 +313,9 @@ if (master.get_digital(DIGITAL_RIGHT)) {
     }
     if (master.get_digital(DIGITAL_Y)) {
       Intake.move(128);
+    }
+    else if (master.get_digital(DIGITAL_RIGHT)) {
+      Intake.move(-128);
     }
     else {
       Intake.set_brake_mode(MOTOR_BRAKE_HOLD);

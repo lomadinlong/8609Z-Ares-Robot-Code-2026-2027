@@ -6,8 +6,8 @@
 /////
 
 // These are out of 127
-const int DRIVE_SPEED = 110;
-const int TURN_SPEED = 90;
+const int DRIVE_SPEED = 127;
+const int TURN_SPEED = 127;
 const int SWING_SPEED = 110;
 
 ///
@@ -23,7 +23,7 @@ void default_constants() {
   chassis.pid_odom_boomerang_constants_set(5.8, 0.0, 32.5);  // Angular control for boomerang motions
 
   // Exit conditions
-  chassis.pid_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
+  chassis.pid_turn_exit_condition_set(45_ms, 3_deg, 125_ms, 7_deg, 250_ms, 250_ms);
   chassis.pid_swing_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 500_ms);
   chassis.pid_drive_exit_condition_set(90_ms, 1_in, 250_ms, 3_in, 500_ms, 500_ms);
   chassis.pid_odom_turn_exit_condition_set(90_ms, 3_deg, 250_ms, 7_deg, 500_ms, 750_ms);
@@ -59,14 +59,57 @@ void default_constants() {
 // Turn Example
 ///
 void turn_example() {
-  // The first parameter is the target in degrees
-  // The second parameter is max speed the robot will drive at
-  Rightlift.move_absolute(-450, 127);
-  Leftlift.move_absolute(450, 127);
-  pros::delay(1000);
+ 
+  Rightlift.move(127);
+  Leftlift.move(-127);
+  pros::delay(650);
+  Rightlift.brake();
+  Leftlift.brake();
   chassis.pid_drive_set(11_in, DRIVE_SPEED, true);
   pros::delay(1000);
   Rightlift.move_absolute(0, 127);
+  Leftlift.move_absolute(0, 127);
+  pros::delay(700);
+  Clampmotor.move(-127);
+  pros::delay(500);
+  Clampmotor.brake();
+  chassis.pid_drive_set(-8_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  chassis.pid_turn_set(90_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(7.5_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  Clampmotor.move(127);
+  Rightlift.move(127);
+  Leftlift.move(-127);
+  chassis.pid_drive_set(-7.5_in, DRIVE_SPEED, true);
+  pros::delay(1100);
+  Clampmotor.brake();
+  Rightlift.brake();
+  Leftlift.brake();
+  chassis.pid_wait();
+  chassis.pid_turn_set(0_deg, TURN_SPEED);
+  chassis.pid_wait();
+  chassis.pid_drive_set(8_in, DRIVE_SPEED, true);
+  chassis.pid_wait();
+  Rightlift.move_absolute(0, 127);
+  Leftlift.move_absolute(0, 127);
+  pros::delay(250);
+  Clampmotor.move(-127);
+  chassis.pid_drive_set(-7.5_in, DRIVE_SPEED, true);
+  pros::delay(500);
+  chassis.pid_turn_set(135_deg, TURN_SPEED);
+  pros::delay(500);
+  
+  chassis.pid_drive_set(-32_in, 127, true);
+  pros::delay(2000);
+  chassis.pid_turn_set(45_deg, 127);
+  pros::delay(500);
+  chassis.pid_drive_set(-8_in, 127, true);
+  pros::delay(700);
+  Toggle.move(64);
+  pros::delay(700);
+  Toggle.brake();
 
 
 }
